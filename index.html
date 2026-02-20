@@ -292,6 +292,65 @@
             }
         }
 
+        /* Music Player */
+        .music-player {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .music-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e94560, #ff6b6b);
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 20px rgba(233, 69, 96, 0.4);
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+
+        .music-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 30px rgba(233, 69, 96, 0.6);
+        }
+
+        .music-btn.playing {
+            animation: rotate 3s linear infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 5px 20px rgba(233, 69, 96, 0.4); }
+            50% { box-shadow: 0 5px 30px rgba(233, 69, 96, 0.7); }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .music-label {
+            font-size: 0.8rem;
+            color: #e94560;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            font-weight: 600;
+        }
+
+        .music-player:hover .music-label {
+            opacity: 1;
+        }
+
         /* Sparkle Effect */
         .sparkle {
             position: absolute;
@@ -321,6 +380,18 @@
 </head>
 <body>
     <div class="floating-hearts" id="hearts"></div>
+    
+    <!-- Music Player -->
+    <div class="music-player">
+        <button class="music-btn" id="musicToggle" onclick="toggleMusic()">
+            <span id="musicIcon">🎵</span>
+        </button>
+        <audio id="bgMusic" loop>
+            <!-- Replace with your song URL -->
+            <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        </audio>
+        <div class="music-label">Our Song</div>
+    </div>
     
     <!-- Hero Section -->
     <section class="hero">
@@ -372,6 +443,25 @@
     </section>
 
     <script>
+        // Music Player
+        let isPlaying = false;
+        const music = document.getElementById('bgMusic');
+        const musicToggle = document.getElementById('musicToggle');
+        const musicIcon = document.getElementById('musicIcon');
+
+        function toggleMusic() {
+            if (isPlaying) {
+                music.pause();
+                musicToggle.classList.remove('playing');
+                musicIcon.textContent = '🎵';
+            } else {
+                music.play().catch(e => console.log('Audio play failed:', e));
+                musicToggle.classList.add('playing');
+                musicIcon.textContent = '⏸';
+            }
+            isPlaying = !isPlaying;
+        }
+
         // Create floating hearts
         const heartsContainer = document.getElementById('hearts');
         const heartSymbols = ['❤️', '💖', '💕', '💗', '💝', '💓'];
